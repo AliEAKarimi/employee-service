@@ -1,7 +1,6 @@
 const http = require('http');
 const server = http.createServer((req, res) => {
     console.log(req.url);
-    if(req.method === "POST" && req.url === )
 })
 
 server.listen(81, '127.0.0.1', () => {
