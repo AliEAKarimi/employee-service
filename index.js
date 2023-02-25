@@ -85,7 +85,45 @@ const server = http.createServer(async (req, res) => {
         res.statusCode = error.statusCode ?? 500;
         res.end(error.message ?? "خطا در ارتباط با پایگاه داده");
       }
+    } else if (method === "PUT") {
+      let body = "";
+      req.on("data", (chunk) => {
+        body += chunk;
+      });
+      req.on("end", async () => {
+        const { id, data, parent } = JSON.parse(body);
+        try {
+          // Validate input
+          // if (!id || !data || !parent) {
+          //   throw new Error("Invalid request");
+          // }
+
+          const isIdExists = await dataClient.exists(id);
+          if (!isIdExists) {
+            res.statusCode = 404;
+            throw new Error("شناسه پیدا نشد.");
+          }
+
+          const isParentExist = await dataClient.exists(parent);
+          if (!isParentExist) throw new Error("شناسه والد نامعتبر است.");
+
+          // Update data and parent in Redis
+          await dataClient.set(id, data);
+          await parentClient.set(id, parent);
+
+          res.end("داده‌ها به‌روزرسانی شد.");
+        } catch (error) {
+          res.statusCode = error.statusCode || 500;
+          res.end(error.message || "خطا در ارتباط با پایگاه داده");
+        }
+      });
+    } else {
+      res.statusCode = 400;
+      res.end("درخواست معتبر نیست.");
     }
+  } else {
+    res.statusCode = 404;
+    res.end("پیدا نشد.");
   }
 });
 
