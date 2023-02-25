@@ -117,7 +117,13 @@ const server = http.createServer(async (req, res) => {
           res.end(error.message || "خطا در ارتباط با پایگاه داده");
         }
       });
+    } else {
+      res.statusCode = 400;
+      res.end("درخواست معتبر نیست.");
     }
+  } else {
+    res.statusCode = 404;
+    res.end("پیدا نشد.");
   }
 });
 
