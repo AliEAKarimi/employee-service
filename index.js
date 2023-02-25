@@ -1,8 +1,15 @@
 const http = require("http");
 const url = require("url");
 const redis = require("redis");
-const client = redis.createClient();
 
+const hostName = "127.0.0.1";
+const redisPort = 6379;
+const client = redis.createClient({
+  socket: {
+    host: hostName,
+    port: redisPort,
+  },
+});
 client.connect();
 client.on("connect", function () {
   console.log("اتصال موفق به پایگاه داده");
@@ -46,7 +53,6 @@ const server = http.createServer(async (req, res) => {
 });
 
 const serverPort = 81;
-const hostName = "127.0.0.1";
 server.listen(serverPort, hostName, () => {
   console.log(`Server running at http://${hostName}:${serverPort}/`);
 });
