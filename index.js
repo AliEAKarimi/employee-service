@@ -21,11 +21,11 @@ const createRedisClient = function (database, host, port) {
 
 const hostName = "127.0.0.1";
 const redisPort = 6379;
-const [dataClient, parentClient] = [0, 1].map((database) =>
-  createRedisClient(database, hostName, redisPort)
-);
-dataClient.connect();
-parentClient.connect();
+const [dataClient, parentClient] = [0, 1].map((database) => {
+  const client = createRedisClient(database, hostName, redisPort);
+  client.connect();
+  return client;
+});
 
 const server = http.createServer(async (req, res) => {
   const { query, pathname } = url.parse(req.url, true);
