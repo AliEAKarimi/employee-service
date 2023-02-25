@@ -57,6 +57,34 @@ const server = http.createServer(async (req, res) => {
           res.end(error.message ?? "خطا در ارتباط با پایگاه داده");
         }
       });
+    } else if (method === "GET") {
+      const { id } = query;
+      try {
+        // Validate input
+        // if (!id) {
+        //   throw new Error("Invalid request");
+        // }
+
+        const isIdExists = await dataClient.exists(id);
+        if (!isIdExists) {
+          res.statusCode = 404;
+          throw new Error("شناسه پیدا نشد.");
+        }
+
+        // Get data and parent from Redis
+        const [data, parent] = await Promise.all([
+          dataClient.get(id),
+          parentClient.get(id),
+        ]);
+
+        const result = { id, data, parent };
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify(result));
+      } catch (error) {
+        // Handle errors appropriately
+        res.statusCode = error.statusCode ?? 500;
+        res.end(error.message ?? "خطا در ارتباط با پایگاه داده");
+      }
     }
   }
 });
