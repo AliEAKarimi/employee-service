@@ -27,11 +27,17 @@ const [dataClient, parentClient] = [0, 1].map((database) => {
   return client;
 });
 
+const RequestMethod = Object.freeze({
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+});
+
 const server = http.createServer(async (req, res) => {
   const { query, pathname } = url.parse(req.url, true);
   const method = req.method;
   if (pathname === "/dataService") {
-    if (method === "POST") {
+    if (method === RequestMethod.POST) {
       let body = "";
       req.on("data", (chunk) => {
         body += chunk;
@@ -57,7 +63,7 @@ const server = http.createServer(async (req, res) => {
           res.end(error.message ?? "خطا در ارتباط با پایگاه داده");
         }
       });
-    } else if (method === "GET") {
+    } else if (method === RequestMethod.GET) {
       const { id } = query;
       try {
         // Validate input
@@ -85,7 +91,7 @@ const server = http.createServer(async (req, res) => {
         res.statusCode = error.statusCode ?? 500;
         res.end(error.message ?? "خطا در ارتباط با پایگاه داده");
       }
-    } else if (method === "PUT") {
+    } else if (method === RequestMethod.PUT) {
       let body = "";
       req.on("data", (chunk) => {
         body += chunk;
