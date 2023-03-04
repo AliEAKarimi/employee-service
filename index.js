@@ -6,6 +6,17 @@ const { isOperationalError } = require("./errorHandlers/errorHandler");
 const dotenv = require("dotenv");
 dotenv.config();
 
+process.on("unhandledRejection", (error) => {
+  console.error(`Unhandled rejection: ${error.stack}`);
+  throw error;
+});
+process.on("uncaughtException", (error) => {
+  if (!isOperationalError(error)) {
+    console.error(`Uncaught exception: ${error.stack}`);
+    process.exit(1);
+  }
+});
+
 const router = new Router();
 // add routes
 router.addRoute("/dataService", RequestMethod.POST, controller.addUser);
