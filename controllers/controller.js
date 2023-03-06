@@ -38,7 +38,9 @@ async function addUser(request, response) {
       // Save data and parent to Redis
       await userDB.add(id, JSON.stringify(data));
       await parentDB.add(id, parent);
-      sendResponse(response, httpStatusCodes.OK, { message: "Data added." });
+      sendResponse(response, httpStatusCodes.CREATED, {
+        message: "Data added.",
+      });
     } catch (error) {
       throw new DatabaseError("Error in adding data");
     }
@@ -81,7 +83,7 @@ async function getUser(request, response) {
       url.parse(request.url, true).query,
       getUserQuerySchema
     );
-  
+
     if (!(await isDataExists(id))) {
       throw new ResourceNotFoundError(`User with id ${id} not found`);
     }
@@ -92,7 +94,7 @@ async function getUser(request, response) {
         userDB.get(id),
         parentDB.get(id),
       ]);
-      const result = { id, data, parent };
+      const result = { id, data: JSON.parse(data), parent };
       sendResponse(response, httpStatusCodes.OK, result);
     } catch (error) {
       throw new DatabaseError("Error in getting data");
