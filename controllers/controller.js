@@ -36,8 +36,11 @@ async function addUser(request, response) {
 
     try {
       // Save data and parent to Redis
-      await userDB.add(id, JSON.stringify(data));
-      await parentDB.add(id, parent);
+      await Promise.all([
+        userDB.add(id, JSON.stringify(data)),
+        parentDB.add(id, parent),
+      ]);
+
       sendResponse(response, httpStatusCodes.CREATED, {
         message: "Data added.",
       });
@@ -66,8 +69,10 @@ async function updateUser(request, response) {
 
     try {
       // Update data and parent in Redis
-      await userDB.update(id, JSON.stringify(data));
-      await parentDB.update(id, parent);
+      await Promise.all([
+        userDB.update(id, JSON.stringify(data)),
+        parentDB.update(id, parent),
+      ]);
       sendResponse(response, httpStatusCodes.OK, { message: "Data updated." });
     } catch (error) {
       throw new DatabaseError("Error in updating data");
