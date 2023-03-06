@@ -11,11 +11,11 @@ module.exports = class Server {
     this.#port = port;
   }
 
-  #onRequest(request, response) {
+  async #onRequest(request, response) {
     const { pathname } = url.parse(request.url, true);
     console.log("Request for " + pathname + " received.");
     try {
-      this.#route(request, response);
+      await this.#route(request, response);
     } catch (error) {
       sendResponse(response, error.statusCode, { message: error.message });
     }

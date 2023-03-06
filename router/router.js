@@ -10,14 +10,14 @@ module.exports = class Router {
     }
     this.handle[pathname][method] = handler;
   }
-  route(request, response) {
+  async route(request, response) {
     const { pathname } = url.parse(request.url, true);
     console.log("Routing a request for  " + pathname);
     if (!this.handle[pathname]) {
       throw new NotFoundError(`No request handler found for ${pathname}`);
     } else {
       if (typeof this.handle[pathname][request.method] === "function") {
-        this.handle[pathname][request.method](request, response);
+        await this.handle[pathname][request.method](request, response);
       } else {
         throw new MethodNotAllowedError(
           `Method ${request.method} not allowed for ${pathname}`
