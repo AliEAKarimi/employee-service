@@ -4,7 +4,9 @@ function validateRequestData(data, schema) {
     abortEarly: false,
   });
   if (error) {
-    const errors = error.details.map((detail) => detail.message);
+    const errors = error.details.map((detail) =>
+      detail.message.replaceAll('"', "'")
+    );
     throw new BadRequestError(`Invalid request data: ${errors.join(", ")}`);
   }
   return value;
