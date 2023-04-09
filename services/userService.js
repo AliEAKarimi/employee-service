@@ -31,7 +31,8 @@ module.exports = class UserService {
   }
   async deleteUser(id) {
     try {
-      await UserModel.getUser(userDB, parentDB, id).delete();
+      const user = await UserModel.getUser(userDB, parentDB, id);
+      await user.delete(userDB, parentDB);
     } catch (error) {
       throw new DatabaseError("Error in deleting data");
     }
