@@ -19,7 +19,7 @@ module.exports = class RedisDatabase extends Database {
   async connect() {
     await this.#client.connect();
   }
-  async add(key, value) {
+  async save(key, value) {
     await this.#client.set(key, value);
   }
   async update(key, value) {

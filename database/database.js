@@ -1,7 +1,7 @@
 const { getCurrentMethodName } = require("../helpers/helpers");
 
 module.exports = class Database {
-  add(key, value) {
+  save(key, value) {
     throw new Error(`Method ${getCurrentMethodName()} is not implemented.`);
   }
   update(key, value) {
