@@ -17,7 +17,9 @@ module.exports = class Server {
     try {
       await this.#route(request, response);
     } catch (error) {
-      sendResponse(response, error.statusCode, { message: error.message });
+      sendResponse(response, error.statusCode ?? 500, {
+        message: error.message,
+      });
     }
   }
 
