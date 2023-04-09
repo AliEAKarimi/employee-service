@@ -29,4 +29,11 @@ module.exports = class UserService {
       throw new DatabaseError("Error in getting data");
     }
   }
+  async deleteUser(id) {
+    try {
+      await UserModel.getUser(userDB, parentDB, id).delete();
+    } catch (error) {
+      throw new DatabaseError("Error in deleting data");
+    }
+  }
 };

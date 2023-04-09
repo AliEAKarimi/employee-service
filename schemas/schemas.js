@@ -16,7 +16,12 @@ const getUserQuerySchema = Joi.object({
   idNumber: Joi.string().required(),
 });
 
+const idNumberSchema = Joi.object({
+  idNumber: Joi.string().required(),
+});
+
 module.exports = {
   userSchema,
   getUserQuerySchema,
+  idNumberSchema,
 };

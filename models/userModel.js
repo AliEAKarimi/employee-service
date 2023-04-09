@@ -28,6 +28,12 @@ module.exports = class UserModel {
       stringify ? JSON.stringify(newValue) : newValue
     );
   }
+  async delete(dataDatabase, parentDatabase) {
+    await Promise.all([
+      dataDatabase.delete(this.idNumber),
+      parentDatabase.delete(this.idNumber),
+    ]);
+  }
   static async getUser(dataDatabase, parentDatabase, idNumber) {
     const [data, parent] = await Promise.all([
       UserModel.#getValue(dataDatabase, idNumber, { parse: true }),

@@ -4,7 +4,11 @@ const UserService = require("./services/userService");
 const { RequestMethod } = require("./helpers/requestMethod");
 const Router = require("./router/router");
 const { isOperationalError } = require("./errorHandlers/errorHandler");
-const { userSchema, getUserQuerySchema } = require("./schemas/schemas");
+const {
+  userSchema,
+  getUserQuerySchema,
+  idNumberSchema,
+} = require("./schemas/schemas");
 const bodyParser = require("./middlewares/bodyParser");
 const dataValidator = require("./middlewares/dataValidator");
 const {
@@ -60,6 +64,16 @@ router.addRoute(
   [
     { function: bodyParser, config: { isParams: true } },
     { function: dataValidator, config: { schema: getUserQuerySchema } },
+    checkIdExists,
+  ]
+);
+router.addRoute(
+  "/dataService",
+  RequestMethod.DELETE,
+  userController.deleteUser.bind(userController),
+  [
+    { function: bodyParser, config: { isParams: true } },
+    { function: dataValidator, config: { schema: idNumberSchema } },
     checkIdExists,
   ]
 );

@@ -25,4 +25,9 @@ module.exports = class UserController {
     const result = await this.#service.getUserInfo(request.body.idNumber);
     sendResponse(response, httpStatusCodes.OK, result);
   }
+
+  async deleteUser(request, response) {
+    await this.#service.deleteUser(request.body.idNumber);
+    sendResponse(response, httpStatusCodes.OK, { message: "Data deleted" });
+  }
 };
