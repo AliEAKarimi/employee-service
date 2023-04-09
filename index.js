@@ -10,6 +10,7 @@ const {
   idNumberSchema,
 } = require("./schemas/schemas");
 const bodyParser = require("./middlewares/bodyParser");
+const queryParamsParser = require("./middlewares/queryParamsParser");
 const dataValidator = require("./middlewares/dataValidator");
 const {
   checkIdNotDuplicated,
@@ -40,7 +41,7 @@ router.addRoute(
   RequestMethod.POST,
   userController.addUser.bind(userController),
   [
-    { function: bodyParser, config: { isParams: false } },
+    { function: bodyParser },
     { function: dataValidator, config: { schema: userSchema } },
     checkIdNotDuplicated,
     checkParentExists,
@@ -51,7 +52,7 @@ router.addRoute(
   RequestMethod.PUT,
   userController.updateUser.bind(userController),
   [
-    { function: bodyParser, config: { isParams: false } },
+    { function: bodyParser },
     { function: dataValidator, config: { schema: userSchema } },
     checkIdExists,
     checkParentExists,
@@ -62,7 +63,7 @@ router.addRoute(
   RequestMethod.GET,
   userController.getUser.bind(userController),
   [
-    { function: bodyParser, config: { isParams: true } },
+    { function: queryParamsParser },
     { function: dataValidator, config: { schema: getUserQuerySchema } },
     checkIdExists,
   ]
@@ -72,7 +73,7 @@ router.addRoute(
   RequestMethod.DELETE,
   userController.deleteUser.bind(userController),
   [
-    { function: bodyParser, config: { isParams: true } },
+    { function: bodyParser },
     { function: dataValidator, config: { schema: idNumberSchema } },
     checkIdExists,
   ]
