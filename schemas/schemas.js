@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const userSchema = Joi.object({
-  idNumber: Joi.string().required(),
+  id: Joi.string().required(),
   data: Joi.object({
     username: Joi.string().required(),
     jobSkill: Joi.string().required(),
@@ -13,15 +13,15 @@ const userSchema = Joi.object({
 });
 
 const getUserQuerySchema = Joi.object({
-  idNumber: Joi.string().required(),
+  id: Joi.string().required(),
 });
 
-const idNumberSchema = Joi.object({
-  idNumber: Joi.string().required(),
+const idSchema = Joi.object({
+  id: Joi.string().required(),
 });
 
 module.exports = {
   userSchema,
   getUserQuerySchema,
-  idNumberSchema,
+  idSchema,
 };

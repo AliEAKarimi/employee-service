@@ -7,7 +7,7 @@ const { isOperationalError } = require("./errorHandlers/errorHandler");
 const {
   userSchema,
   getUserQuerySchema,
-  idNumberSchema,
+  idSchema,
 } = require("./schemas/schemas");
 const bodyParser = require("./middlewares/bodyParser");
 const queryParamsParser = require("./middlewares/queryParamsParser");
@@ -74,7 +74,7 @@ router.addRoute(
   userController.deleteUser.bind(userController),
   [
     { function: bodyParser },
-    { function: dataValidator, config: { schema: idNumberSchema } },
+    { function: dataValidator, config: { schema: idSchema } },
     checkIdExists,
   ]
 );

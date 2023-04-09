@@ -7,7 +7,7 @@ exports.checkIdNotDuplicated = async function checkIdNotDuplicated(
   request,
   response
 ) {
-  const id = request.body.idNumber;
+  const id = request.body.id;
   if (await UserModel.exists(userDB, id)) {
     throw new DuplicateError(`the user id ${id} is duplicated`);
   }
@@ -24,7 +24,7 @@ exports.checkParentExists = async function checkParentExists(
 };
 
 exports.checkIdExists = async function checkIdExists(request, response) {
-  const id = request.body.idNumber;
+  const id = request.body.id;
   if (!(await UserModel.exists(userDB, id)))
     throw new ResourceNotFoundError(`User with id ${id} not found`);
 };

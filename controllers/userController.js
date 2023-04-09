@@ -22,12 +22,12 @@ module.exports = class UserController {
   }
 
   async getUser(request, response) {
-    const result = await this.#service.getUserInfo(request.body.idNumber);
+    const result = await this.#service.getUserInfo(request.body.id);
     sendResponse(response, httpStatusCodes.OK, result);
   }
 
   async deleteUser(request, response) {
-    await this.#service.deleteUser(request.body.idNumber);
+    await this.#service.deleteUser(request.body.id);
     sendResponse(response, httpStatusCodes.OK, { message: "Data deleted" });
   }
 };
