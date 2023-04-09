@@ -15,7 +15,7 @@ module.exports = class UserController {
   }
 
   async updateUser(request, response) {
-    await this.#service.addUser(request.body);
+    await this.#service.updateUser(request.body);
     sendResponse(response, httpStatusCodes.OK, {
       message: "Data updated.",
     });
