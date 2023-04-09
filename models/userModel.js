@@ -15,7 +15,6 @@ module.exports = class UserModel {
         JSON.stringify(this.parent)
       ),
     ]);
-    console.log(result, "result");
   }
   async update(dataDatabase, parentDatabase, newData, newParent) {
     await Promise.all([
