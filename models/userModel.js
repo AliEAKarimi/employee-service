@@ -5,35 +5,38 @@ module.exports = class UserModel {
     this.parent = parent;
   }
   async save(dataDatabase, parentDatabase) {
-    await Promise.allSettled([
-      this.#saveValue(dataDatabase, this.data, { stringify: true }),
-      this.#saveValue(parentDatabase, this.parent),
+    const result = await Promise.allSettled([
+      dataDatabase.save(
+        JSON.stringify(this.idNumber),
+        JSON.stringify(this.data)
+      ),
+      parentDatabase.save(
+        JSON.stringify(this.idNumber),
+        JSON.stringify(this.parent)
+      ),
     ]);
-  }
-  async #saveValue(database, value, { stringify } = { stringify: false }) {
-    await database.save(
-      this.idNumber,
-      stringify ? JSON.stringify(value) : value
-    );
+    console.log(result, "result");
   }
   async update(dataDatabase, parentDatabase, newData, newParent) {
     await Promise.all([
-      this.#updateValue(dataDatabase, newData, { stringify: true }),
-      this.#updateValue(parentDatabase, newParent),
+      dataDatabase.update(
+        JSON.stringify(this.idNumber),
+        JSON.stringify(newData)
+      ),
+      parentDatabase.update(
+        JSON.stringify(this.idNumber),
+        JSON.stringify(newParent)
+      ),
     ]);
   }
-  async #updateValue(database, newValue, { stringify } = { stringify: false }) {
-    await database.update(
-      this.idNumber,
-      stringify ? JSON.stringify(newValue) : newValue
-    );
-  }
+
   async delete(dataDatabase, parentDatabase) {
     await Promise.all([
-      dataDatabase.delete(this.idNumber),
-      parentDatabase.delete(this.idNumber),
+      dataDatabase.delete(JSON.stringify(this.idNumber)),
+      parentDatabase.delete(JSON.stringify(this.idNumber)),
     ]);
   }
+
   static async getUser(dataDatabase, parentDatabase, idNumber) {
     const [data, parent] = await Promise.all([
       UserModel.#getValue(dataDatabase, idNumber, { parse: true }),
