@@ -7,6 +7,9 @@ const userSchema = Joi.object({
     jobSkill: Joi.string().required(),
     job: Joi.object({
       company: Joi.string().required(),
+      post: Joi.string().required(),
+      start: Joi.date().required(),
+      phones: Joi.array().required(),
     }).required(),
   }).required(),
   parent: Joi.string().required(),
