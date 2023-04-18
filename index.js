@@ -8,6 +8,7 @@ const {
   userSchema,
   getUserQuerySchema,
   idSchema,
+  userUpdateSchema,
 } = require("./schemas/schemas");
 // cache helpers.js
 require("./helpers/helpers");
@@ -55,7 +56,7 @@ router.addRoute(
   userController.updateUser.bind(userController),
   [
     { function: bodyParser },
-    { function: dataValidator, config: { schema: userSchema } },
+    { function: dataValidator, config: { schema: userUpdateSchema } },
     checkIdExists,
     checkParentExists,
   ]
