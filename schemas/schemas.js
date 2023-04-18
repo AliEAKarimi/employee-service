@@ -15,6 +15,22 @@ const userSchema = Joi.object({
   parent: Joi.string().required(),
 });
 
+const userUpdateSchema = Joi.object({
+  id: Joi.string().required(),
+  data: Joi.object({
+    idNumber: Joi.string(),
+    jobSkill: Joi.string(),
+    job: Joi.object({
+      company: Joi.string(),
+      post: Joi.string(),
+      start: Joi.date(),
+      phones: Joi.array(),
+    }),
+  }).required(),
+  parent: Joi.string(),
+  newUsername: Joi.string(),
+});
+
 const getUserQuerySchema = Joi.object({
   id: Joi.string().required(),
 });
@@ -27,4 +43,5 @@ module.exports = {
   userSchema,
   getUserQuerySchema,
   idSchema,
+  userUpdateSchema,
 };
