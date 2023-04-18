@@ -9,6 +9,8 @@ const {
   getUserQuerySchema,
   idSchema,
 } = require("./schemas/schemas");
+// cache helpers.js
+require("./helpers/helpers");
 const bodyParser = require("./middlewares/bodyParser");
 const queryParamsParser = require("./middlewares/queryParamsParser");
 const dataValidator = require("./middlewares/dataValidator");
