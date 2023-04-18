@@ -17,7 +17,7 @@ module.exports = class UserModel {
     ]);
   }
 
-  async delete(dataDatabase, parentDatabase) {
+  static async delete(dataDatabase, parentDatabase, id) {
     const result = await Promise.all([
       dataDatabase.delete(this.id),
       parentDatabase.delete(this.id),

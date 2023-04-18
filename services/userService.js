@@ -11,6 +11,7 @@ module.exports = class UserService {
       throw new DatabaseError("Error in adding data");
     }
   }
+  // id: oldUsername
   async updateUser({ id, data, parent }) {
     // Create user model
     const user = new UserModel(id, data, parent);
@@ -31,8 +32,7 @@ module.exports = class UserService {
   }
   async deleteUser(id) {
     try {
-      const user = await UserModel.getUser(userDB, parentDB, id);
-      await user.delete(userDB, parentDB);
+      await UserModel.delete(userDB, parentDB, id);
     } catch (error) {
       throw new DatabaseError("Error in deleting data");
     }
