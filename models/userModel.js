@@ -10,11 +10,24 @@ module.exports = class UserModel {
       parentDatabase.save(this.id, this.parent),
     ]);
   }
-  async update(dataDatabase, parentDatabase, newData, newParent) {
-    await Promise.all([
-      dataDatabase.update(this.id, JSON.stringify(newData)),
-      parentDatabase.update(this.id, newParent),
-    ]);
+  async update(dataDatabase, parentDatabase, newData, newParent, newUsername) {
+    const userData = JSON.parse(JSON.stringify(this.data));
+    Object.deepExtend(userData, newData);
+    if (newUsername) {
+      const oldUsername = this.id;
+      this.id = newUsername;
+      this.data = userData;
+      this.parent = newParent ?? this.parent;
+      await this.save(dataDatabase, parentDatabase);
+      await UserModel.delete(dataDatabase, parentDatabase, oldUsername);
+    } else {
+      await Promise.all([
+        dataDatabase.update(this.id, JSON.stringify(userData)),
+        newParent
+          ? parentDatabase.update(this.id, newParent)
+          : Promise.resolve(),
+      ]);
+    }
   }
 
   static async delete(dataDatabase, parentDatabase, id) {

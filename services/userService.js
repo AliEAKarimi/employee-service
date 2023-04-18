@@ -11,12 +11,12 @@ module.exports = class UserService {
       throw new DatabaseError("Error in adding data");
     }
   }
-  // id: oldUsername
-  async updateUser({ id, data, parent }) {
+
+  async updateUser({ id: oldUsername, data, parent, newUsername }) {
     // Create user model
-    const user = new UserModel(id, data, parent);
+    const user = new UserModel(oldUsername, data, parent);
     try {
-      await user.update(userDB, parentDB, data, parent);
+      await user.update(userDB, parentDB, data, parent, newUsername);
     } catch (error) {
       throw new DatabaseError("Error in updating data");
     }
