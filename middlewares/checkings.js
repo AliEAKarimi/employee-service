@@ -18,7 +18,7 @@ exports.checkParentExists = async function checkParentExists(
   response
 ) {
   const parent = request.body.parent;
-  if (!(await UserModel.exists(userDB, parent))) {
+  if (parent && !(await UserModel.exists(userDB, parent))) {
     throw new ResourceNotFoundError(`the parent ${parent} is not found`);
   }
 };
