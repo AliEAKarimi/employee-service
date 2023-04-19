@@ -18,7 +18,6 @@ const userSchema = Joi.object({
 const userUpdateSchema = Joi.object({
   id: Joi.string().required(),
   data: Joi.object({
-    idNumber: Joi.string(),
     jobSkill: Joi.string(),
     job: Joi.object({
       company: Joi.string(),
