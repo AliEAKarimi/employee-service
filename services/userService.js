@@ -14,7 +14,7 @@ module.exports = class UserService {
 
   async updateUser({ id: oldUsername, data, parent, newUsername }) {
     // Create user model
-    const user = UserModel.getUser(userDB, parentDB, oldUsername);
+    const user = await UserModel.getUser(userDB, parentDB, oldUsername);
     try {
       await user.update(userDB, parentDB, data, parent, newUsername);
     } catch (error) {
