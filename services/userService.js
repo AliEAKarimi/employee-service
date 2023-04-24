@@ -5,36 +5,20 @@ module.exports = class UserService {
   async addUser({ id, data, parent }) {
     // Create user model
     const user = new UserModel(id, data, parent);
-    try {
-      await user.save(userDB, parentDB);
-    } catch (error) {
-      throw new DatabaseError("Error in adding data");
-    }
+    await user.save(userDB, parentDB);
   }
 
   async updateUser({ id: oldUsername, data, parent, newUsername }) {
     // Create user model
     const user = await UserModel.getUser(userDB, parentDB, oldUsername);
-    try {
-      await user.update(userDB, parentDB, data, parent, newUsername);
-    } catch (error) {
-      throw new DatabaseError("Error in updating data");
-    }
+    await user.update(userDB, parentDB, data, parent, newUsername);
   }
   async getUserInfo(id) {
-    try {
-      // Get user model
-      const user = await UserModel.getUser(userDB, parentDB, id);
-      return user;
-    } catch (error) {
-      throw new DatabaseError("Error in getting data");
-    }
+    // Get user model
+    const user = await UserModel.getUser(userDB, parentDB, id);
+    return user;
   }
   async deleteUser(id) {
-    try {
-      await UserModel.delete(userDB, parentDB, id);
-    } catch (error) {
-      throw new DatabaseError("Error in deleting data");
-    }
+    await UserModel.delete(userDB, parentDB, id);
   }
 };

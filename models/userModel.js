@@ -1,3 +1,5 @@
+const DatabaseError = require("../errorHandlers/databaseError");
+
 module.exports = class UserModel {
   constructor(id, data, parent) {
     this.id = id;
@@ -9,6 +11,14 @@ module.exports = class UserModel {
       dataDatabase.save(this.id, JSON.stringify(this.data)),
       parentDatabase.save(this.id, this.parent),
     ]);
+    const rejectedPromisesReason = result.map((promise) => {
+      if (promise.status === "rejected") return promise.reason;
+    });
+    if (rejectedPromisesReason.length > 0) {
+      throw new DatabaseError(
+        `Error adding data, ${rejectedPromisesReason.join(",")}`
+      );
+    }
   }
   async update(dataDatabase, parentDatabase, newData, newParent, newUsername) {
     const userData = JSON.parse(JSON.stringify(this.data));

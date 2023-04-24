@@ -8,26 +8,50 @@ module.exports = class UserController {
   }
 
   async addUser(request, response) {
-    await this.#service.addUser(request.body);
-    sendResponse(response, httpStatusCodes.CREATED, {
-      message: "Data added.",
-    });
+    try {
+      await this.#service.addUser(request.body);
+      sendResponse(response, httpStatusCodes.CREATED, {
+        message: "Data added.",
+      });
+    } catch (error) {
+      sendResponse(response, error.statusCode ?? 500, {
+        message: error.message,
+      });
+    }
   }
 
   async updateUser(request, response) {
-    await this.#service.updateUser(request.body);
-    sendResponse(response, httpStatusCodes.OK, {
-      message: "Data updated.",
-    });
+    try {
+      await this.#service.updateUser(request.body);
+      sendResponse(response, httpStatusCodes.OK, {
+        message: "Data updated.",
+      });
+    } catch (error) {
+      sendResponse(response, error.statusCode ?? 500, {
+        message: error.message,
+      });
+    }
   }
 
   async getUser(request, response) {
-    const result = await this.#service.getUserInfo(request.body.id);
-    sendResponse(response, httpStatusCodes.OK, result);
+    try {
+      const result = await this.#service.getUserInfo(request.body.id);
+      sendResponse(response, httpStatusCodes.OK, result);
+    } catch (error) {
+      sendResponse(response, error.statusCode ?? 500, {
+        message: error.message,
+      });
+    }
   }
 
   async deleteUser(request, response) {
-    await this.#service.deleteUser(request.body.id);
-    sendResponse(response, httpStatusCodes.OK, { message: "Data deleted" });
+    try {
+      await this.#service.deleteUser(request.body.id);
+      sendResponse(response, httpStatusCodes.OK, { message: "Data deleted" });
+    } catch (error) {
+      sendResponse(response, error.statusCode ?? 500, {
+        message: error.message,
+      });
+    }
   }
 };
