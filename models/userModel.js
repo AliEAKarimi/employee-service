@@ -11,9 +11,9 @@ module.exports = class UserModel {
       dataDatabase.save(this.id, JSON.stringify(this.data)),
       parentDatabase.save(this.id, this.parent),
     ]);
-    const rejectedPromisesReason = result.map((promise) => {
-      if (promise.status === "rejected") return promise.reason;
-    });
+    const rejectedPromisesReason = result
+      .filter((promise) => promise.status === "rejected")
+      .map((rejectedPromiseResult) => rejectedPromiseResult.reason);
     if (rejectedPromisesReason.length > 0) {
       throw new DatabaseError(
         `Error adding data, ${rejectedPromisesReason.join(",")}`
