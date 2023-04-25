@@ -1,5 +1,6 @@
 const Database = require("./database");
 const { getRedisClient } = require("../helpers/redisClientHelper");
+const DatabaseError = require("../errorHandlers/databaseError");
 
 const instance = {};
 module.exports = class RedisDatabase extends Database {
@@ -17,21 +18,45 @@ module.exports = class RedisDatabase extends Database {
     }
   }
   async connect() {
-    await this.#client.connect();
+    try {
+      await this.#client.connect();
+    } catch (error) {
+      throw new DatabaseError(`Error database connection, ${error}`);
+    }
   }
-  async add(key, value) {
-    await this.#client.set(key, value);
+  async save(key, value) {
+    try {
+      await this.#client.set(key, value);
+    } catch (error) {
+      throw new DatabaseError(`Error saving data, ${error}`);
+    }
   }
   async update(key, value) {
-    await this.#client.set(key, value);
+    try {
+      await this.#client.set(key, value);
+    } catch (error) {
+      throw new DatabaseError(`Error updating data, ${error}`);
+    }
   }
   async get(key) {
-    return await this.#client.get(key);
+    try {
+      return await this.#client.get(key);
+    } catch (error) {
+      new DatabaseError(`Error getting data, ${error}`);
+    }
   }
   async delete(key) {
-    await this.#client.del(key);
+    try {
+      await this.#client.del(key);
+    } catch (error) {
+      new DatabaseError(`Error deleting data, ${error}`);
+    }
   }
   async exists(key) {
-    return await this.#client.exists(key);
+    try {
+      return await this.#client.exists(key);
+    } catch (error) {
+      new DatabaseError(`Error checking existence, ${error}`);
+    }
   }
 };

@@ -1,17 +1,12 @@
 const BadRequestError = require("../errorHandlers/badRequestError");
-function validateRequestData(data, schema) {
-  const { error, value } = schema.validate(data, {
+module.exports = async function dataValidator(request, response, { schema }) {
+  const { error: err } = schema.validate(request.body, {
     abortEarly: false,
   });
-  if (error) {
-    const errors = error.details.map((detail) =>
+  if (err) {
+    const errors = err.details.map((detail) =>
       detail.message.replaceAll('"', "'")
     );
     throw new BadRequestError(`Invalid request data: ${errors.join(", ")}`);
   }
-  return value;
-}
-
-module.exports = {
-  validateRequestData,
 };
