@@ -1,6 +1,6 @@
 const { userDB, parentDB } = require("../database/databases");
 const UserModel = require("../models/userModel");
-const DatabaseError = require("../errorHandlers/databaseError");
+const DuplicateError = require("../errorHandlers/duplicateError");
 module.exports = class UserService {
   async addUser({ id, data, parent }) {
     // Create user model
@@ -9,6 +9,13 @@ module.exports = class UserService {
   }
 
   async updateUser({ id: oldUsername, data, parent, newUsername }) {
+    if (
+      newUsername &&
+      newUsername !== oldUsername &&
+      (await UserModel.exists(userDB, newUsername))
+    ) {
+      throw new DuplicateError(`the user id ${newUsername} is duplicated`);
+    }
     // Create user model
     const user = await UserModel.getUser(userDB, parentDB, oldUsername);
     await user.update(userDB, parentDB, data, parent, newUsername);
