@@ -1,4 +1,5 @@
 const { userDB } = require("../database/databases");
+const UserModel = require("../models/userModel");
 const ResourceNotFoundError = require("../errorHandlers/resourceNotFoundError");
 const DuplicateError = require("../errorHandlers/duplicateError");
 
@@ -7,7 +8,7 @@ exports.checkIdNotDuplicated = async function checkIdNotDuplicated(
   response
 ) {
   const id = request.body.id;
-  if (await userDB.exists(`user:${id}`)) {
+  if (await UserModel.exists(userDB, `user:${id}`)) {
     throw new DuplicateError(`the user id ${id} is duplicated`);
   }
 };
@@ -17,13 +18,13 @@ exports.checkParentExists = async function checkParentExists(
   response
 ) {
   const parent = request.body.parent;
-  if (parent && !(await userDB.exists(`user:${parent}`))) {
+  if (parent && !(await UserModel.exists(userDB, `user:${parent}`))) {
     throw new ResourceNotFoundError(`the parent ${parent} is not found`);
   }
 };
 
 exports.checkIdExists = async function checkIdExists(request, response) {
   const id = request.body.id;
-  if (!(await userDB.exists(`user:${id}`)))
+  if (!(await UserModel.exists(userDB, `user:${id}`)))
     throw new ResourceNotFoundError(`User with id ${id} not found`);
 };
