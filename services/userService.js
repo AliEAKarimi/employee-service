@@ -1,56 +1,32 @@
 const { userDB, parentDB } = require("../database/databases");
-const userRepository = require("../repositories/userRepository");
-const parentRepository = require("../repositories/parentRepository");
 const DuplicateError = require("../errorHandlers/duplicateError");
+const UserModel = require("../models/userModel");
 
 module.exports = class UserService {
   async addUser({ id, data, parent }) {
-    const newUser = { ...data, job: JSON.stringify(data.job) };
-    const newParent = { parent };
-    await Promise.all([
-      userRepository.save(`${id}`, newUser),
-      parentRepository.save(`${id}`, newParent),
-    ]);
+    const user = new UserModel(id, data, parent);
+    await user.save();
   }
 
   async updateUser({ id: oldUsername, data, parent, newUsername }) {
     if (
       newUsername &&
       newUsername !== oldUsername &&
-      (await userDB.exists(`user:${newUsername}`))
+      (await UserModel.exists(userDB, `user:${newUsername}`))
     ) {
       throw new DuplicateError(`the user id ${newUsername} is duplicated`);
     }
-    const userData = await userRepository.fetch(`${oldUsername}`);
-    userData.job = JSON.parse(userData.job);
-    Object.deepExtend(userData, data);
-    userData.job = JSON.stringify(userData.job);
-    Promise.all([
-      userRepository.save(`${newUsername ?? oldUsername}`, userData),
-      parentRepository.save(`${newUsername ?? oldUsername}`, {
-        parent: parent ?? userData.parent,
-      }),
-    ]);
+    const user = await UserModel.getUser(oldUsername);
+    await user.update(data, parent, newUsername);
     if (newUsername && newUsername !== oldUsername) {
-      Promise.all([
-        userRepository.remove(`${oldUsername}`),
-        parentRepository.remove(`${oldUsername}`),
-      ]);
+      await UserModel.delete(oldUsername);
     }
   }
   async getUserInfo(id) {
-    const [userData, { parent: userParent }] = await Promise.all([
-      userRepository.fetch(`${id}`),
-      parentRepository.fetch(`${id}`),
-    ]);
-    userData.job = JSON.parse(userData.job);
-    const user = { id, userData, userParent };
+    const user = await UserModel.getUser(id);
     return user;
   }
   async deleteUser(id) {
-    await Promise.all([
-      userRepository.remove(`${id}`),
-      parentRepository.remove(`${id}`),
-    ]);
+    await UserModel.delete(id);
   }
 };
