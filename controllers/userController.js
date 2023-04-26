@@ -54,4 +54,15 @@ module.exports = class UserController {
       });
     }
   }
+
+  async getUsersOfAParent(request, response) {
+    try {
+      const users = await this.#service.getUsersOfAParent(request.body.parent);
+      sendResponse(response, httpStatusCodes.OK, users);
+    } catch (error) {
+      sendResponse(response, error.statusCode ?? 500, {
+        message: error.message,
+      });
+    }
+  }
 };

@@ -29,4 +29,10 @@ module.exports = class UserService {
   async deleteUser(id) {
     await UserModel.delete(id);
   }
+  async getUsersOfAParent(parent) {
+    const ids = await UserModel.getUsersOfAParent(parent);
+    // const users = await Promise.all(ids.map((id) => this.getUserInfo(id)));
+    const users = await Promise.all(ids.map((id) => UserModel.getUser(id)));
+    return users;
+  }
 };
