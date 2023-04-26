@@ -1,5 +1,6 @@
 const userRepository = require("../repositories/userRepository");
 const parentRepository = require("../repositories/parentRepository");
+const { EntityId } = require("redis-om");
 
 module.exports = class UserModel {
   constructor(id, { jobSkill, job, idNumber }, parent) {
@@ -47,6 +48,17 @@ module.exports = class UserModel {
   }
   static async exists(database, id) {
     return await database.exists(id);
+  }
+  static async getUsersOfAParent(parent) {
+    await parentRepository.createIndex();
+    const ids = (
+      await parentRepository
+        .search()
+        .where("parent")
+        .equals(parent)
+        .return.all()
+    ).map((user) => user[EntityId]);
+    return ids;
   }
   get data() {
     return {
