@@ -34,6 +34,10 @@ const getUserQuerySchema = Joi.object({
   id: Joi.string().required(),
 });
 
+const getUserOfAParentQuerySchema = Joi.object({
+  parent: Joi.string().required(),
+});
+
 const idSchema = Joi.object({
   id: Joi.string().required(),
 });
@@ -43,4 +47,5 @@ module.exports = {
   getUserQuerySchema,
   idSchema,
   userUpdateSchema,
+  getUserOfAParentQuerySchema,
 };
