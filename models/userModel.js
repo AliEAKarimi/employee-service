@@ -59,7 +59,8 @@ module.exports = class UserModel {
         .equals(parent)
         .return.all()
     ).map((user) => user[EntityId]);
-    return ids;
+    const users = await Promise.all(ids.map((id) => UserModel.getUser(id)));
+    return users;
   }
   static async usernameExists(username) {
     await userRepository.createIndex();
