@@ -4,7 +4,6 @@ const userSchema = Joi.object({
   id: Joi.string().required(),
   data: Joi.object({
     username: Joi.string().required(),
-    idNumber: Joi.string().required(),
     jobSkill: Joi.string().required(),
     job: Joi.object({
       company: Joi.string().required(),
