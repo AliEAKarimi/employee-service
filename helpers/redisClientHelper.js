@@ -14,7 +14,6 @@ function getRedisClient(database, host, port) {
   client.on("error", (err) => {
     console.log(`error in connecting to database ${database}: ${err}`);
   });
-  client.connect();
   return client;
 }
 
