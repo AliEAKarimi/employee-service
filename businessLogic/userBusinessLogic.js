@@ -34,4 +34,8 @@ module.exports = class UserBusinessLogic {
     const users = await Promise.all(ids.map((id) => UserModel.getUser(id)));
     return users;
   }
+  async getUserByUsername(username) {
+    const user = await UserModel.getUserByUsername(username);
+    return user;
+  }
 };

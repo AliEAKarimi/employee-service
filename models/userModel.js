@@ -69,6 +69,17 @@ module.exports = class UserModel {
       .return.count();
     return Boolean(count);
   }
+  static async getUserByUsername(username) {
+    await userRepository.createIndex();
+    const id = (
+      await (await userRepository.search())
+        .where("username")
+        .equals(username)
+        .return.first()
+    )[EntityId];
+    const user = await this.getUser(id);
+    return user;
+  }
   get data() {
     return {
       username: this.username,
