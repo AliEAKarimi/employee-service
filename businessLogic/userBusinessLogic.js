@@ -11,7 +11,6 @@ module.exports = class UserBusinessLogic {
     const user = await UserModel.getUser(id);
     const oldUsername = user.username;
     const newUsername = newData.username;
-    console.log(oldUsername, newUsername);
     if (
       newUsername &&
       newUsername !== oldUsername &&
