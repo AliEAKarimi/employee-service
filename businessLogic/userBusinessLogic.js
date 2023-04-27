@@ -7,19 +7,19 @@ module.exports = class UserBusinessLogic {
     await user.save();
   }
 
-  async updateUser({ id: oldUsername, data, parent, newUsername }) {
+  async updateUser({ id, data: newData, parent: newParent }) {
+    const user = await UserModel.getUser(id);
+    const oldUsername = user.username;
+    const newUsername = newData.username;
+    console.log(oldUsername, newUsername);
     if (
       newUsername &&
       newUsername !== oldUsername &&
-      (await UserModel.exists(`user:${newUsername}`))
+      (await UserModel.usernameExists(newUsername))
     ) {
       throw new DuplicateError(`the user id ${newUsername} is duplicated`);
     }
-    const user = await UserModel.getUser(oldUsername);
-    await user.update(data, parent, newUsername);
-    if (newUsername && newUsername !== oldUsername) {
-      await UserModel.delete(oldUsername);
-    }
+    await user.update(newData, newParent);
   }
   async getUserInfo(id) {
     const user = await UserModel.getUser(id);

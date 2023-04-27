@@ -3,11 +3,11 @@ const parentRepository = require("../repositories/parentRepository");
 const { EntityId } = require("redis-om");
 
 module.exports = class UserModel {
-  constructor(id, { jobSkill, job, idNumber }, parent) {
+  constructor(id, { username, jobSkill, job }, parent) {
     this.id = id;
     this.jobSkill = jobSkill;
     this.job = job;
-    this.idNumber = idNumber;
+    this.username = username;
     this.parent = parent;
   }
   async save() {
@@ -19,15 +19,17 @@ module.exports = class UserModel {
       parentRepository.save(`${this.id}`, { parent: this.parent }),
     ]);
   }
-  async update(newData, newParent, newUsername) {
+  async update(newData, newParent) {
     const userData = this.data;
     Object.deepExtend(userData, newData);
     userData.job = JSON.stringify(userData.job);
     await Promise.all([
-      userRepository.save(`${newUsername ?? this.id}`, userData),
-      parentRepository.save(`${newUsername ?? this.id}`, {
-        parent: newParent ?? this.parent,
-      }),
+      userRepository.save(`${this.id}`, userData),
+      newParent
+        ? parentRepository.save(`${this.id}`, {
+            parent: newParent,
+          })
+        : Promise.resolve("Parent not updated"),
     ]);
   }
 
@@ -59,9 +61,17 @@ module.exports = class UserModel {
     ).map((user) => user[EntityId]);
     return ids;
   }
+  static async usernameExists(username) {
+    await userRepository.createIndex();
+    const count = await (await userRepository.search())
+      .where("username")
+      .equals(username)
+      .return.count();
+    return Boolean(count);
+  }
   get data() {
     return {
-      idNumber: this.idNumber,
+      username: this.username,
       job: this.job,
       jobSkill: this.jobSkill,
     };
