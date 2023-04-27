@@ -24,6 +24,6 @@ module.exports = class RedisRepository extends RepositoryInterface {
     return this.repository.createIndex();
   }
   async search() {
-    return this.repository.search();
+    return await this.repository.search();
   }
 };

@@ -52,8 +52,7 @@ module.exports = class UserModel {
   static async getUsersOfAParent(parent) {
     await parentRepository.createIndex();
     const ids = (
-      await parentRepository
-        .search()
+      await (await parentRepository.search())
         .where("parent")
         .equals(parent)
         .return.all()
