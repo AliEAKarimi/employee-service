@@ -46,8 +46,8 @@ module.exports = class UserModel {
     userData.job = JSON.parse(userData.job);
     return new UserModel(id, userData, userParent);
   }
-  static async exists(database, id) {
-    return await database.exists(id);
+  static async exists(id) {
+    return await userRepository.exists(id);
   }
   static async getUsersOfAParent(parent) {
     await parentRepository.createIndex();
