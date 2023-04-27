@@ -1,6 +1,6 @@
 const Server = require("./server/server");
 const UserController = require("./controllers/userController");
-const UserService = require("./services/userService");
+const UserBusinessLogic = require("./businessLogic/userBusinessLogic");
 const { RequestMethod } = require("./helpers/requestMethod");
 const Router = require("./router/router");
 const { isOperationalError } = require("./errorHandlers/errorHandler");
@@ -36,8 +36,8 @@ process.on("uncaughtException", (error) => {
 });
 
 const router = new Router();
-const userService = new UserService();
-const userController = new UserController(userService);
+const userBusinessLogic = new UserBusinessLogic();
+const userController = new UserController(userBusinessLogic);
 
 // add routes
 router.addRoute(

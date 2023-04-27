@@ -1,7 +1,7 @@
 const DuplicateError = require("../errorHandlers/duplicateError");
 const UserModel = require("../models/userModel");
 
-module.exports = class UserService {
+module.exports = class UserBusinessLogic {
   async addUser({ id, data, parent }) {
     const user = new UserModel(id, data, parent);
     await user.save();

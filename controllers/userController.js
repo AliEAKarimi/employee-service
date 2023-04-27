@@ -2,14 +2,14 @@ const { sendResponse } = require("../helpers/requestHelpers");
 const httpStatusCodes = require("../errorHandlers/httpStatusCodes");
 
 module.exports = class UserController {
-  #service;
-  constructor(service) {
-    this.#service = service;
+  #businessLogic;
+  constructor(businessLogic) {
+    this.#businessLogic = businessLogic;
   }
 
   async addUser(request, response) {
     try {
-      await this.#service.addUser(request.body);
+      await this.#businessLogic.addUser(request.body);
       sendResponse(response, httpStatusCodes.CREATED, {
         message: "Data added.",
       });
@@ -22,7 +22,7 @@ module.exports = class UserController {
 
   async updateUser(request, response) {
     try {
-      await this.#service.updateUser(request.body);
+      await this.#businessLogic.updateUser(request.body);
       sendResponse(response, httpStatusCodes.OK, {
         message: "Data updated.",
       });
@@ -35,7 +35,7 @@ module.exports = class UserController {
 
   async getUser(request, response) {
     try {
-      const result = await this.#service.getUserInfo(request.body.id);
+      const result = await this.#businessLogic.getUserInfo(request.body.id);
       sendResponse(response, httpStatusCodes.OK, result);
     } catch (error) {
       sendResponse(response, error.statusCode ?? 500, {
@@ -46,7 +46,7 @@ module.exports = class UserController {
 
   async deleteUser(request, response) {
     try {
-      await this.#service.deleteUser(request.body.id);
+      await this.#businessLogic.deleteUser(request.body.id);
       sendResponse(response, httpStatusCodes.OK, { message: "Data deleted" });
     } catch (error) {
       sendResponse(response, error.statusCode ?? 500, {
@@ -57,7 +57,7 @@ module.exports = class UserController {
 
   async getUsersOfAParent(request, response) {
     try {
-      const users = await this.#service.getUsersOfAParent(request.body.parent);
+      const users = await this.#businessLogic.getUsersOfAParent(request.body.parent);
       sendResponse(response, httpStatusCodes.OK, users);
     } catch (error) {
       sendResponse(response, error.statusCode ?? 500, {
