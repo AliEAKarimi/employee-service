@@ -3,6 +3,7 @@ const Joi = require("joi");
 const userSchema = Joi.object({
   id: Joi.string().required(),
   data: Joi.object({
+    username: Joi.string().required(),
     idNumber: Joi.string().required(),
     jobSkill: Joi.string().required(),
     job: Joi.object({
@@ -18,6 +19,7 @@ const userSchema = Joi.object({
 const userUpdateSchema = Joi.object({
   id: Joi.string().required(),
   data: Joi.object({
+    username: Joi.string(),
     jobSkill: Joi.string(),
     job: Joi.object({
       company: Joi.string(),
@@ -27,7 +29,6 @@ const userUpdateSchema = Joi.object({
     }),
   }).required(),
   parent: Joi.string(),
-  newUsername: Joi.string(),
 });
 
 const getUserQuerySchema = Joi.object({
