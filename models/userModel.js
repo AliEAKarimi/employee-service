@@ -38,8 +38,14 @@ module.exports = class UserModel {
       userRepository.remove(`${id}`),
       parentRepository.remove(`${id}`),
     ]);
+    await UserModel.updateParents(id);
   }
-
+  static async updateParents(parent) {
+    const ids = await UserModel.#getUsersIdOfAParent(parent);
+    await Promise.all(
+      ids.map((id) => parentRepository.save(`${id}`, { parent: "" }))
+    );
+  }
   static async getUser(id) {
     const [userData, { parent: userParent }] = await Promise.all([
       userRepository.fetch(`${id}`),
@@ -51,7 +57,7 @@ module.exports = class UserModel {
   static async exists(id) {
     return await userRepository.exists(id);
   }
-  static async getUsersOfAParent(parent) {
+  static async #getUsersIdOfAParent(parent) {
     await parentRepository.createIndex();
     const ids = (
       await (await parentRepository.search())
@@ -59,6 +65,10 @@ module.exports = class UserModel {
         .equals(parent)
         .return.all()
     ).map((user) => user[EntityId]);
+    return ids;
+  }
+  static async getUsersOfAParent(parent) {
+    const ids = await UserModel.#getUsersIdOfAParent(parent);
     const users = await Promise.all(ids.map((id) => UserModel.getUser(id)));
     return users;
   }
