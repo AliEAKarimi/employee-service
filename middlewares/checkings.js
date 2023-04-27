@@ -27,3 +27,9 @@ exports.checkIdExists = async function checkIdExists(request, response) {
   if (!(await UserModel.exists(`user:${id}`)))
     throw new ResourceNotFoundError(`User with id ${id} not found`);
 };
+
+exports.checkUsernameExists = async function checkIdExists(request, response) {
+  const username = request.body.username;
+  if (!(await UserModel.usernameExists(username)))
+    throw new ResourceNotFoundError(`User with username ${username} not found`);
+};

@@ -31,8 +31,10 @@ const userUpdateSchema = Joi.object({
 });
 
 const getUserQuerySchema = Joi.object({
-  id: Joi.string().required(),
-});
+  id: Joi.string().optional(),
+  username: Joi.string().optional(),
+  parent: Joi.string().optional(),
+}).xor("id", "username", "parent");
 
 const getUserOfAParentQuerySchema = Joi.object({
   parent: Joi.string().required(),

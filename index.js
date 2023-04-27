@@ -71,7 +71,6 @@ async function initializeApp() {
     [
       { function: queryParamsParser },
       { function: dataValidator, config: { schema: getUserQuerySchema } },
-      checkIdExists,
     ]
   );
   router.addRoute(
@@ -84,19 +83,7 @@ async function initializeApp() {
       checkIdExists,
     ]
   );
-  router.addRoute(
-    "/dataService/users",
-    RequestMethod.GET,
-    userController.getUsersOfAParent.bind(userController),
-    [
-      { function: queryParamsParser },
-      {
-        function: dataValidator,
-        config: { schema: getUserOfAParentQuerySchema },
-      },
-      checkParentExists,
-    ]
-  );
+
   const server = new Server(
     router.route.bind(router),
     process.env.SERVER_HOST,
