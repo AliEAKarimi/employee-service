@@ -27,9 +27,9 @@ module.exports = class UserBusinessLogic {
   async deleteUser(id) {
     await UserModel.delete(id);
   }
-  async getUsersOfAParent(parent) {
-    const users = await UserModel.getUsersOfAParent(parent);
-    return users;
+  async getUsersIdOfAParent(parent) {
+    const ids = await UserModel.getUsersIdOfAParent(parent);
+    return ids;
   }
   async getUserByUsername(username) {
     const user = await UserModel.getUserByUsername(username);

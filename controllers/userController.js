@@ -49,7 +49,7 @@ module.exports = class UserController {
           break;
         case !!parent:
           await checkParentExists(request);
-          result = await this.#businessLogic.getUsersOfAParent(parent);
+          result = await this.#businessLogic.getUsersIdOfAParent(parent);
           break;
         case !!username:
           await checkUsernameExists(request);
