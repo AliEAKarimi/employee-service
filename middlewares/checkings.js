@@ -34,3 +34,8 @@ exports.checkUsernameExists = async function checkUsernameExists(request, respon
     throw new ResourceNotFoundError(`User with username ${username} not found`);
 };
 
+exports.checkUsernameNotDuplicated = async function (request, response) {
+  const username = request.body.data.username;
+  if (await UserModel.usernameExists(username))
+    throw new DuplicateError(`the username ${username} is duplicated`);
+};

@@ -20,6 +20,7 @@ const {
   checkIdNotDuplicated,
   checkParentExists,
   checkIdExists,
+  checkUsernameNotDuplicated
 } = require("./middlewares/checkings");
 const { connectToDatabases } = require("./database/databases");
 const dotenv = require("dotenv");
@@ -50,6 +51,7 @@ async function initializeApp() {
       { function: bodyParser },
       { function: dataValidator, config: { schema: userSchema } },
       checkIdNotDuplicated,
+      checkUsernameNotDuplicated,
       checkParentExists,
     ]
   );
