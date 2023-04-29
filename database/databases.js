@@ -7,7 +7,14 @@ const [userDB, parentDB] = [0, 0].map((database) => {
   const redisDB = getRedisClient(database, REDIS_HOST, REDIS_PORT);
   return redisDB;
 });
+
+async function connectToDatabases() {
+  await userDB.connect();
+  await parentDB.connect();
+}
+
 module.exports = {
   userDB,
   parentDB,
+  connectToDatabases,
 };

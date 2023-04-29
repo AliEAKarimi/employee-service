@@ -1,26 +1,25 @@
-const { userDB, parentDB } = require("../database/databases");
 const DuplicateError = require("../errorHandlers/duplicateError");
 const UserModel = require("../models/userModel");
 
-module.exports = class UserService {
+module.exports = class UserBusinessLogic {
   async addUser({ id, data, parent }) {
     const user = new UserModel(id, data, parent);
     await user.save();
   }
 
-  async updateUser({ id: oldUsername, data, parent, newUsername }) {
+  async updateUser({ id, data: newData, parent: newParent }) {
+    const user = await UserModel.getUser(id);
+    const oldUsername = user.username;
+    const newUsername = newData.username;
+    console.log(oldUsername, newUsername);
     if (
       newUsername &&
       newUsername !== oldUsername &&
-      (await UserModel.exists(userDB, `user:${newUsername}`))
+      (await UserModel.usernameExists(newUsername))
     ) {
       throw new DuplicateError(`the user id ${newUsername} is duplicated`);
     }
-    const user = await UserModel.getUser(oldUsername);
-    await user.update(data, parent, newUsername);
-    if (newUsername && newUsername !== oldUsername) {
-      await UserModel.delete(oldUsername);
-    }
+    await user.update(newData, newParent);
   }
   async getUserInfo(id) {
     const user = await UserModel.getUser(id);
@@ -34,5 +33,9 @@ module.exports = class UserService {
     // const users = await Promise.all(ids.map((id) => this.getUserInfo(id)));
     const users = await Promise.all(ids.map((id) => UserModel.getUser(id)));
     return users;
+  }
+  async getUserByUsername(username) {
+    const user = await UserModel.getUserByUsername(username);
+    return user;
   }
 };

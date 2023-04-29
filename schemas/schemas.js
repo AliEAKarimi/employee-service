@@ -3,7 +3,7 @@ const Joi = require("joi");
 const userSchema = Joi.object({
   id: Joi.string().required(),
   data: Joi.object({
-    idNumber: Joi.string().required(),
+    username: Joi.string().required(),
     jobSkill: Joi.string().required(),
     job: Joi.object({
       company: Joi.string().required(),
@@ -18,6 +18,7 @@ const userSchema = Joi.object({
 const userUpdateSchema = Joi.object({
   id: Joi.string().required(),
   data: Joi.object({
+    username: Joi.string(),
     jobSkill: Joi.string(),
     job: Joi.object({
       company: Joi.string(),
@@ -27,12 +28,13 @@ const userUpdateSchema = Joi.object({
     }),
   }).required(),
   parent: Joi.string(),
-  newUsername: Joi.string(),
 });
 
 const getUserQuerySchema = Joi.object({
-  id: Joi.string().required(),
-});
+  id: Joi.string().optional(),
+  username: Joi.string().optional(),
+  parent: Joi.string().optional(),
+}).xor("id", "username", "parent");
 
 const getUserOfAParentQuerySchema = Joi.object({
   parent: Joi.string().required(),

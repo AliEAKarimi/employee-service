@@ -1,15 +1,20 @@
 const { sendResponse } = require("../helpers/requestHelpers");
 const httpStatusCodes = require("../errorHandlers/httpStatusCodes");
+const {
+  checkIdExists,
+  checkParentExists,
+  checkUsernameExists,
+} = require("../middlewares/checkings");
 
 module.exports = class UserController {
-  #service;
-  constructor(service) {
-    this.#service = service;
+  #businessLogic;
+  constructor(businessLogic) {
+    this.#businessLogic = businessLogic;
   }
 
   async addUser(request, response) {
     try {
-      await this.#service.addUser(request.body);
+      await this.#businessLogic.addUser(request.body);
       sendResponse(response, httpStatusCodes.CREATED, {
         message: "Data added.",
       });
@@ -22,7 +27,7 @@ module.exports = class UserController {
 
   async updateUser(request, response) {
     try {
-      await this.#service.updateUser(request.body);
+      await this.#businessLogic.updateUser(request.body);
       sendResponse(response, httpStatusCodes.OK, {
         message: "Data updated.",
       });
@@ -35,7 +40,22 @@ module.exports = class UserController {
 
   async getUser(request, response) {
     try {
-      const result = await this.#service.getUserInfo(request.body.id);
+      const { id, parent, username } = request.body;
+      let result;
+      switch (true) {
+        case !!id:
+          await checkIdExists(request);
+          result = await this.#businessLogic.getUserInfo(id);
+          break;
+        case !!parent:
+          await checkParentExists(request);
+          result = await this.#businessLogic.getUsersOfAParent(parent);
+          break;
+        case !!username:
+          await checkUsernameExists(request);
+          result = await this.#businessLogic.getUserByUsername(username);
+          break;
+      }
       sendResponse(response, httpStatusCodes.OK, result);
     } catch (error) {
       sendResponse(response, error.statusCode ?? 500, {
@@ -46,19 +66,8 @@ module.exports = class UserController {
 
   async deleteUser(request, response) {
     try {
-      await this.#service.deleteUser(request.body.id);
+      await this.#businessLogic.deleteUser(request.body.id);
       sendResponse(response, httpStatusCodes.OK, { message: "Data deleted" });
-    } catch (error) {
-      sendResponse(response, error.statusCode ?? 500, {
-        message: error.message,
-      });
-    }
-  }
-
-  async getUsersOfAParent(request, response) {
-    try {
-      const users = await this.#service.getUsersOfAParent(request.body.parent);
-      sendResponse(response, httpStatusCodes.OK, users);
     } catch (error) {
       sendResponse(response, error.statusCode ?? 500, {
         message: error.message,

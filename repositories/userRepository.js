@@ -1,7 +1,7 @@
-const { Repository } = require("redis-om");
 const userSchema = require("../schemas/userSchema");
 const { userDB } = require("../database/databases");
+const RedisRepository = require("./redisRepository");
 
-const userRepository = new Repository(userSchema, userDB);
+const userRepository = new RedisRepository(userSchema, userDB);
 
 module.exports = userRepository;
