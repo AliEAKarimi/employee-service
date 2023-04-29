@@ -11,7 +11,6 @@ module.exports = class UserBusinessLogic {
     const user = await UserModel.getUser(id);
     const oldUsername = user.username;
     const newUsername = newData.username;
-    console.log(oldUsername, newUsername);
     if (
       newUsername &&
       newUsername !== oldUsername &&
@@ -28,11 +27,9 @@ module.exports = class UserBusinessLogic {
   async deleteUser(id) {
     await UserModel.delete(id);
   }
-  async getUsersOfAParent(parent) {
-    const ids = await UserModel.getUsersOfAParent(parent);
-    // const users = await Promise.all(ids.map((id) => this.getUserInfo(id)));
-    const users = await Promise.all(ids.map((id) => UserModel.getUser(id)));
-    return users;
+  async getUsersIdOfAParent(parent) {
+    const ids = await UserModel.getUsersIdOfAParent(parent);
+    return ids;
   }
   async getUserByUsername(username) {
     const user = await UserModel.getUserByUsername(username);

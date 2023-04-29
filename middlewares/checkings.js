@@ -28,8 +28,14 @@ exports.checkIdExists = async function checkIdExists(request, response) {
     throw new ResourceNotFoundError(`User with id ${id} not found`);
 };
 
-exports.checkUsernameExists = async function checkIdExists(request, response) {
+exports.checkUsernameExists = async function checkUsernameExists(request, response) {
   const username = request.body.username;
   if (!(await UserModel.usernameExists(username)))
     throw new ResourceNotFoundError(`User with username ${username} not found`);
+};
+
+exports.checkUsernameNotDuplicated = async function (request, response) {
+  const username = request.body.data.username;
+  if (await UserModel.usernameExists(username))
+    throw new DuplicateError(`the username ${username} is duplicated`);
 };
